@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+d5e07f36b6a774cec0b3a2c4e0f41d75 ../generated/greetings.pb.cc

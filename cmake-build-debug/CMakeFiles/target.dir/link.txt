@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtarget.a CMakeFiles/target.dir/generated/greetings.pb.cc.o CMakeFiles/target.dir/generated/greetings.grpc.pb.cc.o
+/usr/bin/ranlib libtarget.a
