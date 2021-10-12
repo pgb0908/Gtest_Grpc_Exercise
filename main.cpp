@@ -59,10 +59,10 @@ private:
 TEST(grpc_server_test, client_check_test){
 
     std::thread server_th([](){
-        std::cout << "-----GLOBAL ENV SETUP-----" << std::endl;
 
         // grpc 서버 부팅
         std::string server_address("0.0.0.0:50051");
+        // 서비스의 스켈레톤 생성
         GreeterServiceImpl service;
 
         grpc::EnableDefaultHealthCheckService(true);
@@ -82,6 +82,8 @@ TEST(grpc_server_test, client_check_test){
         server->Wait();
     });
     server_th.detach();
+
+    // 서버가 부팅되길 충분히 기다려야 함
     sleep(5);
 
 
@@ -95,21 +97,19 @@ TEST(grpc_server_test, client_check_test){
         // InsecureChannelCredentials()).
         std::string target_str = "localhost:50051";
 
+        // 클라이언트 stub 생성
         GreeterClient greeter(
                 grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
         std::string user("world");
+        // SayHello는 stub을 포장한것
         std::string reply = greeter.SayHello(user);
         std::cout << "Greeter received: " << reply << std::endl;
 
+        // 클라이어트 측에서 서버로부터 수신된 값 비교
         EXPECT_TRUE(reply != "RPC failed");
     });
 
-
     client_th.join();
-
-    // 값 비교
-
-
 
 }
 
