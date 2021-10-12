@@ -1,6 +1,0 @@
-/snap/clion/164/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" /home/bong/CLionProjects/googelTestExercise
--- Using protobuf 3.15.8.0
--- Using gRPC 1.41.0-dev
--- Configuring done
--- Generating done
--- Build files have been written to: /home/bong/CLionProjects/googelTestExercise/cmake-build-debug
