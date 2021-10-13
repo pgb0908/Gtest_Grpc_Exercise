@@ -4,9 +4,10 @@ project(googelTestExercise)
 set(CMAKE_CXX_STANDARD 11)
 
 # setting gtest
-add_executable(googelTestExercise main.cpp)
 add_subdirectory(third_party/googletest)
 
+# find Threads
+find_package(Threads)
 
 # Find Protobuf & Grpc
 find_package(Protobuf CONFIG REQUIRED)
@@ -59,19 +60,44 @@ add_custom_command(
         DEPENDS "${proto}"
 )
 
-add_library(target STATIC
+add_library(greeting_proto STATIC
         ${proto_srcs}
         ${grpc_srcs}
         )
 
-find_package(Threads)
-target_link_libraries(googelTestExercise PRIVATE
+############# test1 #########################
+add_executable(basic_grpc_test basic_grpc_test.cpp)
+target_link_libraries(basic_grpc_test PUBLIC
         ${_REFLECTION}
         ${_GRPC_GRPCPP}
         ${_PROTOBUF_LIBPROTOBUF}
-        target
+        greeting_proto
         gtest
-        Threads::Threads)
+        Threads::Threads
+        )
+######################################
 
+## otel linking
+option(WITH_OTLP "we use gRPC" on)
+option(CMAKE_POSITION_INDEPENDENT_CODE "" on)
+option(BUILD_TESTING "we skip test" off)
+option(WITH_EXAMPLES "we skip example" off)
 
+include_directories(
+        ${CMAKE_BINARY_DIR}/generated/third_party/opentelemetry-proto)
+include_directories(third_party/opentelemetry-cpp/exporters/otlp/include)
+include_directories(third_party/opentelemetry-cpp/exporters/ostream/include)
 
+# setting otel
+add_subdirectory(third_party/opentelemetry-cpp)
+
+add_executable(otel_grpc_test otel_grpc_test.cpp)
+target_link_libraries(otel_grpc_test PUBLIC
+        opentelemetry_api
+        opentelemetry_trace
+        opentelemetry_exporter_ostream_span
+        opentelemetry_exporter_otlp_grpc
+        ${_GRPC_GRPCPP}
+        gtest
+        Threads::Threads
+        )
